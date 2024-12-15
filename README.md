@@ -19,7 +19,10 @@ Handwritten Text Recognition
 
 [Mozilla Public License](https://github.com/alarxx/HTR/blob/main/LICENSE)
 
+### Exhibit A - Source Code Form License Notice
 ```
+This file is part of the HTR Project – a demo pipeline for Intelligent Word Recognition of unconstrained handwritten text.
+
 Copyright © 2024 Alar Akilbekov, Baktiyar Toksanbay
 All Rights Reserved.
 
