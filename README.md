@@ -3,6 +3,8 @@
 
 **OCR** engines are primarily focused on character-by-character machine printed text recognition from a scanned document and **ICR** for different fonts or even handwritten text:
 
+![Примеры_pages-to-jpg-0002](https://github.com/user-attachments/assets/f4a0ae3a-7c10-47f5-8640-e374a3f31986)
+
 **Intelligent Word Recognition (IWR)** is the recognition of unconstrained handwritten words. IWR recognizes entire handwritten words or phrases instead of character-by-character, like its predecessors. (our aim).
 
 ## Previous projects
