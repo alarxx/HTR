@@ -1,5 +1,5 @@
 # HTR
-Handwritten Text Recognition
+> Handwritten Text Recognition
 
 **OCR** engines are primarily focused on character-by-character machine printed text recognition from a scanned document and **ICR** for different fonts or even handwritten text:
 
