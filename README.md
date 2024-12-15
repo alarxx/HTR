@@ -35,7 +35,7 @@ Handwritten Text Recognition
 
 ## Licence 
 
-[Mozilla Public License](https://github.com/Alar-q/Tensor-library/blob/main/LICENSE)
+[Mozilla Public License](https://github.com/alarxx/HTR/blob/main/LICENSE)
 
 ```
 Copyright © 2024 Alar Akilbekov, Baktiyar Toksanbay
