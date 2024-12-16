@@ -4,6 +4,7 @@ import torch
 import torchvision
 import torchvision.transforms as transforms
 import numpy as np
+from PIL import Image
 
 
 # Кастомная трансформация для паддинга до 64x64 и ресайза только при необходимости
@@ -61,23 +62,21 @@ class DataTransforms:
     def __init__(self):
         self.train_transform = transforms.Compose([
             transforms.Resize(size=(64, 64)),
-            # transforms.RandomResizedCrop(64, scale=(0.5, 1.5)), # Рандомное увеличение/уменьшение
-            # transforms.RandomRotation(10), # Повороты
-            transforms.RandomAffine(
-                degrees=0,  # Повороты на ± градусов
-                translate=(0.2, 0.2),  # Сдвиг до % от ширины/высоты
-                scale=(0.5, 2),  # Масштабирование
-                shear=30  # Наклон на ± градусов
-            ),
-            # transforms.RandomHorizontalFlip(p=1),
+            # transforms.RandomPerspective(distortion_scale=0.5, p=0.5),
+            # transforms.RandomAffine(
+            #     degrees=30,  # Повороты на ± градусов
+            #     translate=(0.2, 0.2),  # Сдвиг до % от ширины/высоты
+            #     scale=(0.5, 2),  # Масштабирование
+            #     shear=30  # Наклон на ± градусов
+            # ),
             # PadToSquareAndConditionalResize(64), # Паддинг или ресайз до 64x64
             transforms.ToTensor(),
             AddRandomNoise(amount=0.1),
-            transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
+            # transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
         ])
 
         self.val_transform = transforms.Compose([
-            transforms.Resize(64),
+            transforms.Resize(size=(64, 64)),
             transforms.ToTensor(),
-            transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
+            # transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
         ])

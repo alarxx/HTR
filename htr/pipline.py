@@ -1,14 +1,19 @@
 import numpy as np
+import matplotlib.pyplot as plt
+
 import torch
 import torch.nn as nn
 import torch.optim as optim
 from torch.utils.data import DataLoader, Dataset, Subset
 from torchvision import transforms
 from torchvision.datasets import ImageFolder
-import matplotlib.pyplot as plt
+
 from sklearn.model_selection import KFold, StratifiedKFold
+from sklearn.metrics import f1_score
 from collections import Counter
-from classificator.cnns import FullyCNN12
+
+from data_transforms.trans import DataTransforms
+from classificator.cnns import FullyCNN10
 
 
 #====================================================================
@@ -79,10 +84,11 @@ def train_one_epoch(model, dataloader, optimizer, criterion):
         y_true.extend(labels.cpu().numpy())
         y_pred.extend(preds.cpu().numpy())
 
+        i+=1
+        if i % 10 != 0:
+            continue
         print(f"Train epoch, minibatch: {i},",
               f"Train Loss: {loss.item():.4f}, Train Acc: {((preds == labels).sum().item())/labels.size(0):.4f}\n")
-
-        i+=1
 
     epoch_loss = running_loss / total
     epoch_acc = correct / total
@@ -119,8 +125,8 @@ def validate_one_epoch(model, dataloader, criterion):
             y_true.extend(labels.cpu().numpy())
             y_pred.extend(preds.cpu().numpy())
 
-            print(f"Val epoch, minibatch: {i},",
-                   f"Val Loss: {loss.item():.4f}, Val Acc: {((preds == labels).sum().item())/labels.size(0):.4f}\n")
+            # print(f"Val epoch, minibatch: {i},",
+            #        f"Val Loss: {loss.item():.4f}, Val Acc: {((preds == labels).sum().item())/labels.size(0):.4f}\n")
 
             i+=1
 
@@ -139,7 +145,6 @@ def validate_one_epoch(model, dataloader, criterion):
 #
 # https://pytorch.org/vision/main/auto_examples/transforms/plot_transforms_getting_started.html
 #====================================================================
-from data_transforms.trans import DataTransforms
 
 data_transforms_obj = DataTransforms()
 train_transform = data_transforms_obj.train_transform
@@ -161,7 +166,7 @@ val_transform = data_transforms_obj.val_transform
 #
 # https://pytorch.org/vision/stable/generated/torchvision.datasets.ImageFolder.html#torchvision.datasets.ImageFolder
 #====================================================================
-full_dataset = ImageFolder(root='./datasets/CMNIST', transform=None, allow_empty=False) # -> Dataset - List[Tuple[<PIL.Image>, int]]
+full_dataset = ImageFolder(root='./datasets/CMNIST', transform=None) # -> Dataset - List[Tuple[<PIL.Image>, int]]
 
 print("full_dataset:", full_dataset)
 print()
@@ -175,8 +180,8 @@ print()
 #====================================================================
 # Hyperparameters
 #====================================================================
-batch_size = 32
-num_epochs = 10
+batch_size = 128
+num_epochs = 2
 learning_rate = 0.001
 
 
@@ -189,7 +194,7 @@ labels = [label for _, label in full_dataset]
 # print("labels", labels)
 print()
 
-num_folds = 2
+num_folds = 3
 # https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.KFold.html
 # kf = KFold(n_splits=num_folds, shuffle=True, random_state=42)
 
@@ -244,7 +249,7 @@ for fold, (train_idx, val_idx) in enumerate(skf.split(indices, labels)):
     val_loader = DataLoader(val_ds, batch_size=batch_size, shuffle=False)
 
     num_classes = len(full_dataset.classes)
-    model = FullyCNN12(num_classes=num_classes).to(device)
+    model = FullyCNN10(num_classes=num_classes).to(device)
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.Adam(model.parameters(), lr=learning_rate)
 
@@ -252,8 +257,8 @@ for fold, (train_idx, val_idx) in enumerate(skf.split(indices, labels)):
     val_acc_history = []
 
     for epoch in range(num_epochs):
-        train_loss, train_acc, train_f1 = train_one_epoch(model, train_loader, optimizer, criterion)
-        val_loss, val_acc, val_f1 = validate_one_epoch(model, val_loader, criterion)
+        train_loss, train_acc, train_f1 = train_one_epoch(model=model, dataloader=train_loader, optimizer=optimizer, criterion=criterion)
+        val_loss, val_acc, val_f1 = validate_one_epoch(model=model, dataloader=val_loader, criterion=criterion)
 
         train_acc_history.append(train_acc)
         val_acc_history.append(val_acc)
@@ -264,6 +269,17 @@ for fold, (train_idx, val_idx) in enumerate(skf.split(indices, labels)):
 
     # Сохраняем результаты фолда
     fold_results.append((train_acc_history, val_acc_history, model.state_dict()))
+
+
+Теперь нужно визуализировать среднюю точность по всем фолдам на каждой эпохе на обучающей выборке и на валидационной.
+
+Как разделить на тестовую выборку и обучающую еще?
+Я же делаю кросс валидацию, но не делю выборку на тест.
+Как мне сделать, чтобы сначала выборка делилась на тестовую и обучающую,
+и обучающую уже отправлять на кросс валидацию?
+
+
+
 
 #====================================================================
 # Выберем лучший фолд по последней точности на валидации, например
