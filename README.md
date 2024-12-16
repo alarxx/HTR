@@ -56,7 +56,7 @@ Morphological kernel is necessary to identify lines of text. Its width is propor
 
 The approach combines the advantages of deep model (EAST) with classical image processing methods.
 
-**Limitations**
+**Limitations**  
 The method is designed to detect individual words on white paper, where the lines of text are written horizontally. This is a limitation, because handwritten text can be written in different structures, in a circle, in tables, and there can be different formulas and this requires a different research.
 
 
