@@ -35,17 +35,17 @@ For **[Handwriting Recognition (HWR)](https://en.wikipedia.org/wiki/Handwriting_
 - piece of paper
 - image
 
-**Problem**
-Input data: Image
-Output data: written text on the image
+**Problem**  
+Input data: Image  
+Output data: written text on the image  
 
 Sub-tasks:
 - Text Detection
-- Classification
+- Text Recognition
 
 ---
 
-Firstly, [[Text Detection]].
+#### Text Detection
 
 **General Algorithm of the applied Text Detection**
 1. Estimation of average text height using EAST
@@ -58,6 +58,9 @@ The approach combines the advantages of deep model (EAST) with classical image p
 
 **Limitations**
 The method is designed to detect individual words on white paper, where the lines of text are written horizontally. This is a limitation, because handwritten text can be written in different structures, in a circle, in tables, and there can be different formulas and this requires a different research.
+
+
+#### Text Recognition
 
 
 ## Datasets
