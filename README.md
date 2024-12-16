@@ -1,12 +1,7 @@
 # HTR
 > Handwritten Text Recognition
 
-**OCR** engines are primarily focused on character-by-character machine printed text recognition from a scanned document and **ICR** for different fonts or even handwritten text:
-
-![Примеры_pages-to-jpg-0002](https://github.com/user-attachments/assets/f4a0ae3a-7c10-47f5-8640-e374a3f31986)
-
-**Intelligent Word Recognition (IWR)** is the recognition of unconstrained handwritten words. IWR recognizes entire handwritten words or phrases instead of character-by-character, like its predecessors. (our aim).
-
+---
 
 ## Previous projects
 
@@ -14,10 +9,68 @@
 - [Tensor-library](https://github.com/alarxx/Tensor-library)
 
 
+## Description
+
+For **[Handwriting Recognition (HWR)](https://en.wikipedia.org/wiki/Handwriting_recognition):**
+- [Optical Character Recognition (OCR)](https://en.wikipedia.org/wiki/Optical_character_recognition)
+- [Intelligent character recognition (ICR)](https://en.wikipedia.org/wiki/Intelligent_character_recognition)
+- [Intelligent Word Recognition (IWR)](https://en.wikipedia.org/wiki/Intelligent_word_recognition)
+
+**OCR** engines are primarily focused on character-by-character machine printed text recognition from a scanned document and **ICR** for different fonts or even handwritten text:
+
+![Примеры_pages-to-jpg-0002](https://github.com/user-attachments/assets/f4a0ae3a-7c10-47f5-8640-e374a3f31986)
+
+**Intelligent Word Recognition (IWR)** is the recognition of unconstrained handwritten words. IWR recognizes entire handwritten words or phrases instead of character-by-character, like its predecessors. (our aim).
+
+---
+
+**On-line:**
+- pen-based computer screen surface
+- pen-up and pen-down switching
+- pen pressure
+- velocity/changes of writing direction
+- specifically
+
+**Off-line:** (our aim)
+- piece of paper
+- image
+
+**Problem**
+Input data: Image
+Output data: written text on the image
+
+Sub-tasks:
+- Text Detection
+- Classification
+
+---
+
+Firstly, [[Text Detection]].
+
+**General Algorithm of the applied Text Detection**
+1. Estimation of average text height using EAST
+2. Morphological transformation finds text regions.
+3. Visualization and cropping out text regions for further analysis.
+
+Morphological kernel is necessary to identify lines of text. Its width is proportional to the height of the text and also conventionally kernel size must be an **odd number**.
+
+The approach combines the advantages of deep model (EAST) with classical image processing methods.
+
+**Limitations**
+The method is designed to detect individual words on white paper, where the lines of text are written horizontally. This is a limitation, because handwritten text can be written in different structures, in a circle, in tables, and there can be different formulas and this requires a different research.
+
+
 ## Datasets
 
 - CMNIST: https://github.com/bolattleubayev/cmnist
 - KOHTD: Kazakh Offline Handwritten Text Dataset: https://github.com/abdoelsayed2016/KOHTD
+
+## Future research
+- Circular text recognition
+- Table detection and structure recognition
+- Sequential patterns of texts for recognition or post-processing
+- End-to-end model for text detection and recognition
+- Speech Recognition
 
 
 ## Authors
