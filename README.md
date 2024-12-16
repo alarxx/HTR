@@ -7,10 +7,18 @@
 
 **Intelligent Word Recognition (IWR)** is the recognition of unconstrained handwritten words. IWR recognizes entire handwritten words or phrases instead of character-by-character, like its predecessors. (our aim).
 
+
 ## Previous projects
 
 - [Handwriting-Recognition](https://github.com/alarxx/Handwriting-Recognition)
 - [Tensor-library](https://github.com/alarxx/Tensor-library)
+
+
+## Datasets
+
+- CMNIST: https://github.com/bolattleubayev/cmnist
+- KOHTD: Kazakh Offline Handwritten Text Dataset: https://github.com/abdoelsayed2016/KOHTD
+
 
 ## Authors
 
