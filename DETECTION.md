@@ -39,12 +39,13 @@ Morphological Transformations являются heuristic подходом, ко�
 
 Метод детекции расчитан на слова написанные горизонтально на более менее чистой бумаге, не на бумаге в клетку и без различных рисунков.
 
-**Canny**
+### Canny
 
-Показать картинки Canny 
+Показать картинки Canny  
+
 HTR\htr\detection\my_comparisons\morpho
 
-**Morphological Dilation followed by Erosion (Closing)**  
+### Morphological Dilation followed by Erosion (Closing)**  
 https://docs.opencv.org/4.x/d9/d61/tutorial_py_morphological_ops.html
 
 Original  
@@ -63,8 +64,13 @@ Closing
 
 Показывать картинки
 HTR\htr\detection\my_comparisons\morpho
+HTR\htr\detection\my_comparisons\our_approach
 
-C:\git\HTR\htr\detection\my_comparisons\our_approach
+![steps](https://github.com/alarxx/HTR/blob/main/htr/detection/my_comparisons/our_approach/steps.png)
+
+![result](https://github.com/alarxx/HTR/blob/main/htr/detection/my_comparisons/our_approach/result.png)
+
+
 # Text Recognition
 
 1) Alphabet Recognition
