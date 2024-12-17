@@ -54,10 +54,10 @@ Morphological Transformations являются heuristic подходом, ко�
 ### Canny
 
 Показать картинки Canny  
-
 HTR\htr\detection\my_comparisons\morpho
 
-https://github.com/alarxx/HTR/blob/main/htr/detection/my_comparisons/morpho/Canny.png
+![Canny](https://github.com/alarxx/HTR/blob/main/htr/detection/my_comparisons/morpho/Canny.png)
+
 
 ### Morphological Dilation followed by Erosion (Closing)**  
 https://docs.opencv.org/4.x/d9/d61/tutorial_py_morphological_ops.html
@@ -98,6 +98,8 @@ closed500x7.png
 boxes500x7.png  
 ![boxes500x7.png](https://github.com/alarxx/HTR/blob/main/htr/detection/my_comparisons/morpho/boxes500x7.png)
 
+
+Morphological kernel is necessary to identify lines of text. Its width is proportional to the height of the text, that we estimate using EAST Detector, and also conventionally kernel size must be an odd number.
 
 HTR\htr\detection\my_comparisons\our_approach
 
