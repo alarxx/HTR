@@ -1,4 +1,11 @@
+#====================================================================
+# Data transformations and Augmentation
+# ImageFolder Dataset содержит PIL.Image объекты
+#
+# https://pytorch.org/vision/main/auto_examples/transforms/plot_transforms_getting_started.html
+#
 # https://github.com/pytorch/vision/blob/main/torchvision/transforms/transforms.py
+#====================================================================
 
 import torch
 import torchvision
@@ -8,6 +15,7 @@ from PIL import Image
 
 
 # Кастомная трансформация для паддинга до 64x64 и ресайза только при необходимости
+# Я перестал использовать это, потому что я использую Affine и Perspective, и этот класс просто лишняя головная боль.
 class PadToSquareAndConditionalResize:
     def __init__(self, size):
         self.size = size

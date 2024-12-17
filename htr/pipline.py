@@ -10,6 +10,8 @@ from torchvision.datasets import ImageFolder
 
 from sklearn.model_selection import KFold, StratifiedKFold
 from sklearn.metrics import f1_score
+from sklearn.model_selection import train_test_split
+
 from collections import Counter
 
 from data_transforms.trans import DataTransforms
@@ -140,18 +142,6 @@ def validate_one_epoch(model, dataloader, criterion):
 
 
 #====================================================================
-# Data transformations and Augmentation
-# ImageFolder Dataset содержит PIL.Image объекты
-#
-# https://pytorch.org/vision/main/auto_examples/transforms/plot_transforms_getting_started.html
-#====================================================================
-
-data_transforms_obj = DataTransforms()
-train_transform = data_transforms_obj.train_transform
-val_transform = data_transforms_obj.val_transform
-
-
-#====================================================================
 # Load Dataset
 # Assumed structure:
 # root_dir/class1/*.jpg
@@ -168,14 +158,60 @@ val_transform = data_transforms_obj.val_transform
 #====================================================================
 full_dataset = ImageFolder(root='./datasets/CMNIST', transform=None) # -> Dataset - List[Tuple[<PIL.Image>, int]]
 
-print("full_dataset:", full_dataset)
+print("Full Dataset:", full_dataset)
 print()
 # Output: Dataset ImageFolder: Number of datapoints: 14, Root location: ./dataset
 print("full_dataset[0]:", full_dataset[0])
 # Output: (<PIL.Image.Image image mode=RGB size=41x56 at 0x7EFC13DBFF40>, 0)
 print("Classes:", full_dataset.classes) # list: [class_names]
+# print("Targets:", full_dataset.targets) # list: [class_names]
 print("Class to index mapping:", full_dataset.class_to_idx) # dict: {class_name: index}
 print()
+
+
+# Разделяем full_dataset на обучающую и тестовую выборки
+train_indices, test_indices = train_test_split(
+    np.arange(len(full_dataset)),
+    test_size=0.2,  # 20% для теста
+    random_state=42,
+    stratify=[label for _, label in full_dataset]  # Учитываем баланс классов
+)
+
+# Создаем Subset для обучающей и тестовой выборок
+global_train_dataset = Subset(full_dataset, train_indices)
+global_test_dataset = Subset(full_dataset, test_indices)
+
+print(f"Train dataset: {global_train_dataset}")
+print(f"Test dataset: {global_test_dataset}")
+
+
+# Убеждаюсь, что соотношения количества примеров в классах остаются одинаковыми.
+# # Получаем лейблы для обучающей и тестовой выборок
+# train_labels = [full_dataset.targets[idx] for idx in train_indices]
+# test_labels = [full_dataset.targets[idx] for idx in test_indices]
+#
+# # Подсчитываем количество каждого класса
+# train_class_counts = Counter(train_labels)
+# test_class_counts = Counter(test_labels)
+#
+# # Вычисляем процентное соотношение
+# train_percentages = {
+#     full_dataset.classes[label]: count / len(train_labels) * 100
+#     for label, count in train_class_counts.items()
+# }
+# test_percentages = {
+#     full_dataset.classes[label]: count / len(test_labels) * 100
+#     for label, count in test_class_counts.items()
+# }
+#
+# # Вывод результатов
+# print("Train class percentages:")
+# for class_name, percentage in train_percentages.items():
+#     print(f"{class_name}: {percentage:.2f}%")
+#
+# print("\nTest class percentages:")
+# for class_name, percentage in test_percentages.items():
+#     print(f"{class_name}: {percentage:.2f}%")
 
 #====================================================================
 # Hyperparameters
@@ -188,8 +224,8 @@ learning_rate = 0.001
 #====================================================================
 # Cross-validation
 #====================================================================
-indices = np.arange(len(full_dataset)) # [0, len]
-labels = [label for _, label in full_dataset]
+indices = np.arange(len(global_train_dataset)) # [0, len]
+labels = [label for _, label in global_train_dataset]
 # print("indices", indices)
 # print("labels", labels)
 print()
@@ -220,16 +256,26 @@ for fold, (train_idx, val_idx) in enumerate(skf.split(indices, labels)):
     # print("val_labels, train_labels:", val_labels, train_labels)
 
     # Подсчитываем количество каждого класса
-    train_class_counts = Counter(train_labels)
-    val_class_counts = Counter(val_labels)
-
+    # train_class_counts = Counter(train_labels)
+    # val_class_counts = Counter(val_labels)
+    #
     # Вычисляем процентное соотношение
-    train_percentages = {full_dataset.classes[label]: count / len(train_labels) * 100 for label, count in train_class_counts.items()}
-    val_percentages = {full_dataset.classes[label]: count / len(val_labels) * 100 for label, count in val_class_counts.items()}
-    print("Train class percentages:", train_percentages)
-    print()
-    print("Validation class percentages:", val_percentages)
-    print()
+    # train_percentages = {full_dataset.classes[label]: count / len(train_labels) * 100
+    #                      for label, count in train_class_counts.items()}
+    # val_percentages = {full_dataset.classes[label]: count / len(val_labels) * 100
+    #                    for label, count in val_class_counts.items()}
+    #
+    # Вывод результатов
+    # print("Train class percentages:")
+    # for class_name, percentage in train_percentages.items():
+    #     print(f"{class_name}: {percentage:.2f}%")
+    # print()
+    #
+    # print("\nValidation class percentages:")
+    # for class_name, percentage in val_percentages.items():
+    #     print(f"{class_name}: {percentage:.2f}%")
+    # print()
+
 
     # Подготовка датасетов для конкретного фолда
     train_subset = Subset(full_dataset, train_idx)
@@ -241,9 +287,8 @@ for fold, (train_idx, val_idx) in enumerate(skf.split(indices, labels)):
     print(f"Validation dataset size: {len(val_subset)}")
     print("-" * 30)
 
-
-    train_ds = CustomDataset(train_subset, transform=train_transform)
-    val_ds = CustomDataset(val_subset, transform=val_transform)
+    train_ds = CustomDataset(train_subset, transform=DataTransforms().train_transform)
+    val_ds = CustomDataset(val_subset, transform=DataTransforms().val_transform)
 
     train_loader = DataLoader(train_ds, batch_size=batch_size, shuffle=True)
     val_loader = DataLoader(val_ds, batch_size=batch_size, shuffle=False)
@@ -270,14 +315,16 @@ for fold, (train_idx, val_idx) in enumerate(skf.split(indices, labels)):
     # Сохраняем результаты фолда
     fold_results.append((train_acc_history, val_acc_history, model.state_dict()))
 
+    plt.plot(range(num_epochs), train_acc_history, label='Train Accuracy')
+    plt.plot(range(num_epochs), val_acc_history, label='Validation Accuracy')
+    plt.xlabel('Epochs')
+    plt.ylabel('Accuracy')
+    plt.legend()
+    plt.title(f"Fold {fold+1}")
+    plt.show()
 
-Теперь нужно визуализировать среднюю точность по всем фолдам на каждой эпохе на обучающей выборке и на валидационной.
 
-Как разделить на тестовую выборку и обучающую еще?
-Я же делаю кросс валидацию, но не делю выборку на тест.
-Как мне сделать, чтобы сначала выборка делилась на тестовую и обучающую,
-и обучающую уже отправлять на кросс валидацию?
-
+# Теперь нужно визуализировать среднюю точность по всем фолдам на каждой эпохе на обучающей выборке и на валидационной.
 
 
 
