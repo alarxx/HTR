@@ -18,7 +18,7 @@ from sklearn.metrics import accuracy_score, f1_score, confusion_matrix, Confusio
 from collections import Counter
 
 from data_transforms.trans import DataTransforms
-from classificator.cnns import FullyCNN10
+from classificator.cnns import FullyCNN10, FullyCNN12
 
 import pickle
 from utils.io import Savior
@@ -238,8 +238,8 @@ print(f"Test dataset: {global_test_dataset}")
 # Hyperparameters
 #====================================================================
 batch_size = 256
-num_epochs = 15
-learning_rate = 0.001
+num_epochs = 5
+learning_rate = 0.0001
 
 
 #====================================================================
@@ -316,35 +316,45 @@ for fold, (train_idx, val_idx) in enumerate(skf.split(indices, labels)):
 
     num_classes = len(full_dataset.classes)
     model = FullyCNN10(num_classes=num_classes).to(device)
-    criterion = nn.CrossEntropyLoss()
+    class_counts = Counter(labels)
+    class_weights = torch.tensor([1.0 / class_counts[i] for i in range(len(class_counts))], device=device)
+    criterion = nn.CrossEntropyLoss(weight=class_weights)
     optimizer = optim.Adam(model.parameters(), lr=learning_rate)
 
     train_acc_history = []
     train_f1_history = []
+    train_loss_history = []
     val_acc_history = []
     val_f1_history = []
+    val_loss_history = []
 
     for epoch in range(num_epochs):
         train_loss, train_acc, train_f1 = train_one_epoch(model=model, dataloader=train_loader, optimizer=optimizer, criterion=criterion)
         val_loss, val_acc, val_f1 = validate_one_epoch(model=model, dataloader=val_loader, criterion=criterion)
 
-        train_acc_history.append(train_acc)
-        train_f1_history.append(train_f1)
-        val_acc_history.append(val_acc)
-        val_f1_history.append(val_f1)
-
         print(f"Epoch [{epoch+1}/{num_epochs}]\n",
               f"Train Loss: {train_loss:.4f}, Train Acc: {train_acc:.4f}, Train F-Score: {train_f1:.4f}\n",
               f"Val Loss: {val_loss:.4f}, Val Acc: {val_acc:.4f}, Val F-Score: {val_f1:.4f}")
 
+        # Высчитываем точность на тестовом датасете без аугментации для честности сравнения между train и validation accuracy
+        _, train_acc, train_f1 = validate_one_epoch(model=model, dataloader=train_loader, criterion=criterion)
+
+        train_acc_history.append(train_acc)
+        train_f1_history.append(train_f1)
+        train_loss_history.append(train_loss)
+        val_acc_history.append(val_acc)
+        val_f1_history.append(val_f1)
+        val_loss_history.append(val_loss)
+
     # Сохраняем результаты фолда
-    fold_results.append((train_acc_history, train_f1_history, val_acc_history, val_f1_history, model.state_dict()))
+    # fold_results.append((train_acc_history, train_f1_history, val_acc_history, val_f1_history, model.state_dict()))
+    fold_results.append((train_acc_history, train_f1_history, train_loss_history, val_acc_history, val_f1_history, val_loss_history, model.state_dict()))
 
 # Теперь нужно визуализировать среднюю точность по всем фолдам на каждой эпохе на обучающей выборке и на валидационной.
 
-
+model_prefix="Alphabet_FCNN_5"
 savior = Savior()
-savior.save_models(fold_results, full_dataset, prefix="Alphabet_FCNN")
+savior.save_models(fold_results, full_dataset, prefix=model_prefix)
 
 # Initialize accumulators for train and validation accuracies
 avg_train_acc = np.zeros(num_epochs)
@@ -352,7 +362,7 @@ avg_val_acc = np.zeros(num_epochs)
 
 # Accumulate accuracies across folds
 for fold_result in fold_results:
-    train_acc_history, train_f1_history, val_acc_history, val_f1_history, _ = fold_result
+    train_acc_history, train_f1_history, train_loss_history, val_acc_history, val_f1_history, val_loss_history, _ = fold_result
     avg_train_acc += np.array(train_acc_history)
     avg_val_acc += np.array(val_acc_history)
 
@@ -378,7 +388,7 @@ best_fold = -1
 best_val_acc = -1
 
 for i, fold_result in enumerate(fold_results):
-    val_acc_last_epoch = fold_result[3][-1]  # val_acc_history на последней эпохе, ! changed to f-score 2->3
+    val_acc_last_epoch = fold_result[4][-1]  # val_acc_history на последней эпохе, ! changed to f-score 2->3
     if val_acc_last_epoch > best_val_acc:
         best_val_acc = val_acc_last_epoch
         best_fold = i
@@ -388,7 +398,7 @@ print(f"Best model is from fold {best_fold+1} with Validation Accuracy: {best_va
 # =======================
 # Загрузка лучшей модели
 # =======================
-checkpoint = torch.load(f"Alphabet_FCNN_{best_fold}.pth", map_location=device)
+checkpoint = torch.load(f"{model_prefix}_{best_fold}.pth", map_location=device)
 model = FullyCNN10(num_classes=len(checkpoint['classes'])).to(device)
 model.load_state_dict(checkpoint['model_state_dict'])
 model.eval()

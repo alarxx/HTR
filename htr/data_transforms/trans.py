@@ -71,12 +71,12 @@ class DataTransforms:
     def __init__(self):
         self.train_transform = transforms.Compose([
             transforms.Resize(size=(64, 64)),
-            # transforms.RandomPerspective(distortion_scale=0.5, p=0.5),
+            transforms.RandomPerspective(distortion_scale=0.7, p=0.3),
             transforms.RandomAffine(
-                degrees=30,  # Повороты на ± градусов
-                translate=(0.05, 0.05),  # Сдвиг до % от ширины/высоты
-                scale=(0.9, 1.5),  # Масштабирование
-                shear=10  # Наклон на ± градусов
+                degrees=45,  # Повороты на ± градусов
+                translate=(0.1, 0.1),  # Сдвиг до % от ширины/высоты
+                scale=(0.9, 2),  # Масштабирование
+                shear=15  # Наклон на ± градусов
             ),
             # PadToSquareAndConditionalResize(64), # Паддинг или ресайз до 64x64
             transforms.ToTensor(),

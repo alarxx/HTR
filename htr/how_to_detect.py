@@ -6,8 +6,8 @@ from detection.mydetector import MyDetector
 
 if __name__ == "__main__":
 
-    # INPUT_IMAGE     = "./detection/assets/gnhk_019.jpg" # Path to the input image
-    INPUT_IMAGE     = "./detection/assets/handwritten_kaz.jpg" # Path to the input image
+    INPUT_IMAGE     = "./detection/assets/gnhk_019.jpg" # Path to the input image
+    # INPUT_IMAGE     = "./detection/assets/handwritten_kaz.jpg" # Path to the input image
 
     # Load the input image
     frame = cv2.imread(INPUT_IMAGE) # BGR

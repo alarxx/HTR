@@ -8,14 +8,16 @@ class Savior:
     # Функция для сохранения моделей
     def save_models(self, fold_results, full_dataset, prefix='model_fold'):
         for i, fold_result in enumerate(fold_results):
-            train_acc_history, train_f1_history, val_acc_history, val_f1_history, model_state_dict = fold_result
+            train_acc_history, train_f1_history, train_loss_history, val_acc_history, val_f1_history, val_loss_history, model_state_dict = fold_result
             torch.save({
                 'model_state_dict': model_state_dict,
                 'classes': full_dataset.classes,
                 'train_acc_history': train_acc_history,
                 'train_f1_history': train_f1_history,
+                'train_loss_history': train_loss_history,
                 'val_acc_history': val_acc_history,
                 'val_f1_history': val_f1_history,
+                'val_loss_history': val_loss_history,
             }, f"{prefix}_{i}.pth")
 
             print(f"Model for fold {i} saved as {prefix}_{i}.pth")
@@ -40,8 +42,10 @@ class Savior:
             metadata.append({
                 'train_acc_history': checkpoint['train_acc_history'],
                 'train_f1_history': checkpoint['train_f1_history'],
+                'train_loss_history': checkpoint['train_loss_history'],
                 'val_acc_history': checkpoint['val_acc_history'],
                 'val_f1_history': checkpoint['val_f1_history'],
+                'val_loss_history': checkpoint['val_loss_history'],
                 'classes': classes
             })
 
