@@ -35,7 +35,7 @@ East detector расчитан больше на machine printed text.
 C:\git\HTR\htr\detection\my_comparisons\EAST_IMAGES
 
 On printed text  
-![printed text detection]([URL](https://github.com/alarxx/HTR/blob/main/htr/detection/my_comparisons/EAST_IMAGES/example2_.jpg))
+![printed text detection](https://github.com/alarxx/HTR/blob/main/htr/detection/my_comparisons/EAST_IMAGES/example2_.jpg)
 
 On handwritten text  
 ![handwritten text detection](https://github.com/alarxx/HTR/blob/main/htr/detection/my_comparisons/EAST_IMAGES/gnhk_019_.png)
