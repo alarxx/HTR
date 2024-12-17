@@ -17,6 +17,10 @@ from collections import Counter
 from data_transforms.trans import DataTransforms
 from classificator.cnns import FullyCNN10
 
+import pickle
+from utils.io import Savior
+
+
 
 #====================================================================
 # Device (CPU/GPU/MPS)
@@ -217,7 +221,7 @@ print(f"Test dataset: {global_test_dataset}")
 # Hyperparameters
 #====================================================================
 batch_size = 256
-num_epochs = 10
+num_epochs = 30
 learning_rate = 0.001
 
 
@@ -230,7 +234,7 @@ labels = [label for _, label in global_train_dataset]
 # print("labels", labels)
 print()
 
-num_folds = 2
+num_folds = 5
 # https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.KFold.html
 # kf = KFold(n_splits=num_folds, shuffle=True, random_state=42)
 
@@ -299,21 +303,31 @@ for fold, (train_idx, val_idx) in enumerate(skf.split(indices, labels)):
     optimizer = optim.Adam(model.parameters(), lr=learning_rate)
 
     train_acc_history = []
+    train_f1_history = []
     val_acc_history = []
+    val_f1_history = []
 
     for epoch in range(num_epochs):
         train_loss, train_acc, train_f1 = train_one_epoch(model=model, dataloader=train_loader, optimizer=optimizer, criterion=criterion)
         val_loss, val_acc, val_f1 = validate_one_epoch(model=model, dataloader=val_loader, criterion=criterion)
 
         train_acc_history.append(train_acc)
+        train_f1_history.append(train_f1)
         val_acc_history.append(val_acc)
+        val_f1_history.append(val_f1)
 
         print(f"Epoch [{epoch+1}/{num_epochs}]\n",
               f"Train Loss: {train_loss:.4f}, Train Acc: {train_acc:.4f}, Train F-Score: {train_f1:.4f}\n",
               f"Val Loss: {val_loss:.4f}, Val Acc: {val_acc:.4f}, Val F-Score: {val_f1:.4f}")
 
     # Сохраняем результаты фолда
-    fold_results.append((train_acc_history, val_acc_history, model.state_dict()))
+    fold_results.append((train_acc_history, train_f1_history, val_acc_history, val_f1_history, model.state_dict()))
+
+# Теперь нужно визуализировать среднюю точность по всем фолдам на каждой эпохе на обучающей выборке и на валидационной.
+
+
+savior = Savior()
+savior.save_models(fold_results, full_dataset, prefix="Alphabet_FCNN")
 
 # Initialize accumulators for train and validation accuracies
 avg_train_acc = np.zeros(num_epochs)
@@ -321,7 +335,7 @@ avg_val_acc = np.zeros(num_epochs)
 
 # Accumulate accuracies across folds
 for fold_result in fold_results:
-    train_acc_history, val_acc_history, _ = fold_result
+    train_acc_history, train_f1_history, val_acc_history, val_f1_history, _ = fold_result
     avg_train_acc += np.array(train_acc_history)
     avg_val_acc += np.array(val_acc_history)
 
@@ -341,46 +355,6 @@ plt.grid(True)
 plt.show()
 
 
-
-# Теперь нужно визуализировать среднюю точность по всем фолдам на каждой эпохе на обучающей выборке и на валидационной.
-
-
-
-#====================================================================
-# Выберем лучший фолд по последней точности на валидации, например
-#====================================================================
-# best_fold = None
-# best_val_acc = -1
-# for i, (_, val_acc_hist, _) in enumerate(fold_results):
-#     if val_acc_hist[-1] > best_val_acc:
-#         best_val_acc = val_acc_hist[-1]
-#         best_fold = i
-# print(f"Best fold: {best_fold+1} with validation acc: {best_val_acc:.4f}")
-#
-# best_model_state = fold_results[best_fold][2]
-
-# #====================================================================
-# # 10. Сохраняем модель
-# #====================================================================
-# model_save_path = "alphabet_classifier.pth"
-# torch.save({
-#     'model_state_dict': best_model_state,
-#     'classes': full_dataset.classes
-# }, model_save_path)
-# print("Model saved at:", model_save_path)
-
-# #====================================================================
-# # 11. Визуализация точности для лучшего фолда
-# #====================================================================
-# train_acc_hist, val_acc_hist, _ = fold_results[best_fold]
-# plt.figure(figsize=(8, 6))
-# plt.plot(train_acc_hist, label='Train Accuracy')
-# plt.plot(val_acc_hist, label='Val Accuracy')
-# plt.xlabel('Epoch')
-# plt.ylabel('Accuracy')
-# plt.title('Training and Validation Accuracy')
-# plt.legend()
-# plt.show()
 
 #
 # #====================================================================
