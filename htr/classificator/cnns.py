@@ -49,7 +49,7 @@ class FullyCNN10(nn.Module):
             # ---8 convolution block---
             nn.Conv2d(512, 512, kernel_size=3, padding=1),
             nn.LeakyReLU(),
-            # nn.Dropout(p=0.25),
+            nn.Dropout(p=0.3),
 
             # ---Global MaxPooling---
             nn.AdaptiveMaxPool2d((1, 1))  # Преобразуем выходной тензор к размеру (1, 1)
@@ -124,7 +124,7 @@ class FullyCNN12(nn.Module):
             # ---8 convolution block---
             nn.Conv2d(512, 512, kernel_size=3, padding=1),
             nn.LeakyReLU(),
-            # nn.Dropout(p=0.25),
+            nn.Dropout(p=0.25),
 
             # ---Global MaxPooling---
             nn.AdaptiveMaxPool2d((1, 1))  # Преобразуем выходной тензор к размеру (1, 1)
