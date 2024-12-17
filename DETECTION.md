@@ -24,6 +24,8 @@ On printed text
 On handwritten text  
 ![handwritten_tesseract.png](https://github.com/alarxx/HTR/blob/main/htr/detection/my_comparisons/tesseract/handwritten_tesseract.png)
 
+Tesseract отлично распознает машинный текст, но он не расчитан для распознавания рукописного текста.
+
 
 ## EAST
 
@@ -119,6 +121,21 @@ HTR\htr\detection\my_comparisons\our_approach
 
 ![result.png](https://github.com/alarxx/HTR/blob/main/htr/detection/my_comparisons/our_approach/result.png)
 
+## References
+
+References:
+- https://googlecode.blogspot.com/2006/08/announcing-tesseract-ocr.html
+- https://sourceforge.net/projects/tesseract-ocr/
+- Smith, R. (2007, September). An overview of the Tesseract OCR engine. In Ninth international conference on document analysis and recognition (ICDAR 2007) (Vol. 2, pp. 629-633). IEEE.
+- 
+- EAST TEXT DETECTION EXAMPLE: https://github.com/opencv/opencv/blob/master/samples/dnn/text_detection.py
+- Text detection model: https://github.com/argman/EAST
+- Download link: https://www.dropbox.com/s/r2ingd0l3zt8hxs/frozen_east_text_detection.tar.gz?dl=1
+- Zhou, X., Yao, C., Wen, H., Wang, Y., Zhou, S., He, W., & Liang, J. (2017). East: an efficient and accurate scene text detector. In Proceedings of the IEEE conference on Computer Vision and Pattern Recognition (pp. 5551-5560).
+
+- Canny, J. (1986). A computational approach to edge detection. IEEE Transactions on pattern analysis and machine intelligence, (6), 679-698.
+- https://docs.opencv.org/4.x/d9/d61/tutorial_py_morphological_ops.html
+- Vincent, L. (1991). Morphological transformations of binary images with arbitrary structuring elements. Signal processing, 22(1), 3-23.
 
 # Text Recognition
 
