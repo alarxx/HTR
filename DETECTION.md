@@ -40,6 +40,10 @@ On printed text
 On handwritten text  
 ![handwritten text detection](https://github.com/alarxx/HTR/blob/main/htr/detection/my_comparisons/EAST_IMAGES/gnhk_019_.png)
 
+![difficult handwritten text detection](https://github.com/alarxx/HTR/blob/main/htr/detection/my_comparisons/EAST_IMAGES/gnhk_015_.png)
+
+Можно заметить, что если EAST нашел слово, то это достаточно вероятно является словом, но он часто пропускает слова. Мы используем это в нашем подходе обнаружения текста.
+
 Одним из интересных моментов - EAST может находить слова расположенные под углом.
 
 ![round text detection](https://github.com/alarxx/HTR/blob/main/htr/detection/my_comparisons/EAST_IMAGES/round_.jpg)
@@ -74,7 +78,8 @@ Erosion
 Closing  
 ![image](https://github.com/user-attachments/assets/710a3dd2-a721-4a3a-9c87-e3cc343d7d18)
 
-Главный параметр в нашем случае это ширина ядра. В зависимости от ширины мы можем находить строки, слова и так далее.
+Главный параметр в нашем случае это ширина ядра. В зависимости от ширины мы можем находить строки, слова и так далее. 
+Как я уже писал можно заметить, что если EAST нашел слово, то это достаточно вероятно является словом, но он часто пропускает слова. Можно взять среднюю высоту найденного слово и сделать ширину ядра для Closing пропорциональным этой средней высоте. Мы предполагаем, что между контурами больше avg_height/2, то это разные слова. Для поиска линий мы используем c x avg_height, c > 2.
 
 
 Показывать картинки
