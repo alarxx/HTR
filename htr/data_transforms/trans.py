@@ -71,7 +71,7 @@ class DataTransforms:
     def __init__(self):
         self.train_transform = transforms.Compose([
             transforms.Resize(size=(64, 64)),
-            transforms.RandomPerspective(distortion_scale=0.5, p=0.5),
+            # transforms.RandomPerspective(distortion_scale=0.5, p=0.5),
             transforms.RandomAffine(
                 degrees=30,  # Повороты на ± градусов
                 translate=(0.2, 0.2),  # Сдвиг до % от ширины/высоты

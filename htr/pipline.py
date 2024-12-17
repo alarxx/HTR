@@ -238,7 +238,7 @@ print(f"Test dataset: {global_test_dataset}")
 # Hyperparameters
 #====================================================================
 batch_size = 256
-num_epochs = 30
+num_epochs = 15
 learning_rate = 0.001
 
 
