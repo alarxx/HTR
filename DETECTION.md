@@ -80,6 +80,13 @@ Closing
 Показывать картинки
 HTR\htr\detection\my_comparisons\morpho
 
+closed15x7.png  
+![closed15x7.png](https://github.com/alarxx/HTR/blob/main/htr/detection/my_comparisons/morpho/closed15x7.png)
+
+boxes15x7.png  
+![boxes15x7.png](https://github.com/alarxx/HTR/blob/main/htr/detection/my_comparisons/morpho/boxes15x7.png)
+
+
 closed50x7.png  
 ![closed50x7.png](https://github.com/alarxx/HTR/blob/main/htr/detection/my_comparisons/morpho/closed50x7.png)
 
