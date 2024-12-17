@@ -378,7 +378,7 @@ best_fold = -1
 best_val_acc = -1
 
 for i, fold_result in enumerate(fold_results):
-    val_acc_last_epoch = fold_result[2][-1]  # val_acc_history на последней эпохе
+    val_acc_last_epoch = fold_result[3][-1]  # val_acc_history на последней эпохе, ! changed to f-score 2->3
     if val_acc_last_epoch > best_val_acc:
         best_val_acc = val_acc_last_epoch
         best_fold = i
