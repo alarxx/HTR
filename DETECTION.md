@@ -57,6 +57,8 @@ Morphological Transformations являются heuristic подходом, ко�
 
 HTR\htr\detection\my_comparisons\morpho
 
+https://github.com/alarxx/HTR/blob/main/htr/detection/my_comparisons/morpho/Canny.png
+
 ### Morphological Dilation followed by Erosion (Closing)**  
 https://docs.opencv.org/4.x/d9/d61/tutorial_py_morphological_ops.html
 
@@ -74,8 +76,29 @@ Closing
 
 Главный параметр в нашем случае это ширина ядра. В зависимости от ширины мы можем находить строки, слова и так далее.
 
+
 Показывать картинки
 HTR\htr\detection\my_comparisons\morpho
+
+closed50x7.png  
+![closed50x7.png](https://github.com/alarxx/HTR/blob/main/htr/detection/my_comparisons/morpho/closed50x7.png)
+
+boxes50x7.png  
+![boxes50x7.png](https://github.com/alarxx/HTR/blob/main/htr/detection/my_comparisons/morpho/boxes50x7.png)
+
+closed150x7.png  
+![closed150x7.png](https://github.com/alarxx/HTR/blob/main/htr/detection/my_comparisons/morpho/closed150x7.png)
+
+boxes150x7.png  
+![boxes150x7.png](https://github.com/alarxx/HTR/blob/main/htr/detection/my_comparisons/morpho/boxes150x7.png)
+
+closed500x7.png  
+![closed500x7.png](https://github.com/alarxx/HTR/blob/main/htr/detection/my_comparisons/morpho/closed500x7.png)
+
+boxes500x7.png  
+![boxes500x7.png](https://github.com/alarxx/HTR/blob/main/htr/detection/my_comparisons/morpho/boxes500x7.png)
+
+
 HTR\htr\detection\my_comparisons\our_approach
 
 ![steps.png](https://github.com/alarxx/HTR/blob/main/htr/detection/my_comparisons/our_approach/steps.png)
