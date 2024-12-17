@@ -216,8 +216,8 @@ print(f"Test dataset: {global_test_dataset}")
 #====================================================================
 # Hyperparameters
 #====================================================================
-batch_size = 128
-num_epochs = 2
+batch_size = 256
+num_epochs = 10
 learning_rate = 0.001
 
 
@@ -230,7 +230,7 @@ labels = [label for _, label in global_train_dataset]
 # print("labels", labels)
 print()
 
-num_folds = 3
+num_folds = 2
 # https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.KFold.html
 # kf = KFold(n_splits=num_folds, shuffle=True, random_state=42)
 
@@ -315,13 +315,31 @@ for fold, (train_idx, val_idx) in enumerate(skf.split(indices, labels)):
     # Сохраняем результаты фолда
     fold_results.append((train_acc_history, val_acc_history, model.state_dict()))
 
-    plt.plot(range(num_epochs), train_acc_history, label='Train Accuracy')
-    plt.plot(range(num_epochs), val_acc_history, label='Validation Accuracy')
-    plt.xlabel('Epochs')
-    plt.ylabel('Accuracy')
-    plt.legend()
-    plt.title(f"Fold {fold+1}")
-    plt.show()
+# Initialize accumulators for train and validation accuracies
+avg_train_acc = np.zeros(num_epochs)
+avg_val_acc = np.zeros(num_epochs)
+
+# Accumulate accuracies across folds
+for fold_result in fold_results:
+    train_acc_history, val_acc_history, _ = fold_result
+    avg_train_acc += np.array(train_acc_history)
+    avg_val_acc += np.array(val_acc_history)
+
+# Compute average accuracies
+avg_train_acc /= len(fold_results)
+avg_val_acc /= len(fold_results)
+
+# Visualize the average accuracies
+plt.figure(figsize=(10, 6))
+plt.plot(range(1, num_epochs + 1), avg_train_acc, label='Train Accuracy', marker='o')
+plt.plot(range(1, num_epochs + 1), avg_val_acc, label='Validation Accuracy', marker='o')
+plt.xlabel('Epochs')
+plt.ylabel('Accuracy')
+plt.title('Average Train and Validation Accuracy Across Folds')
+plt.legend()
+plt.grid(True)
+plt.show()
+
 
 
 # Теперь нужно визуализировать среднюю точность по всем фолдам на каждой эпохе на обучающей выборке и на валидационной.
