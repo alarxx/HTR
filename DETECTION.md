@@ -18,9 +18,12 @@ The method is designed to detect individual words on white paper, where the line
 
 ## Tesseract 
 
-on printed text
+On printed text  
+![printed_tesseract.png](https://github.com/alarxx/HTR/blob/main/htr/detection/my_comparisons/tesseract/printed_tesseract.png)
 
-on handwritten text
+On handwritten text  
+![handwritten_tesseract.png](https://github.com/alarxx/HTR/blob/main/htr/detection/my_comparisons/tesseract/handwritten_tesseract.png)
+
 
 ## EAST
 
@@ -28,10 +31,19 @@ on handwritten text
 
 East detector расчитан больше на machine printed text. 
 
-Показать примеры
+Показать примеры  
 C:\git\HTR\htr\detection\my_comparisons\EAST_IMAGES
 
+On printed text  
+![printed text detection]([URL](https://github.com/alarxx/HTR/blob/main/htr/detection/my_comparisons/EAST_IMAGES/example2_.jpg))
+
+On handwritten text  
+![handwritten text detection](https://github.com/alarxx/HTR/blob/main/htr/detection/my_comparisons/EAST_IMAGES/gnhk_019_.png)
+
 Одним из интересных моментов - EAST может находить слова расположенные под углом.
+
+![round text detection](https://github.com/alarxx/HTR/blob/main/htr/detection/my_comparisons/EAST_IMAGES/round_.jpg)
+
 
 ## Our Approach
 
@@ -66,9 +78,9 @@ Closing
 HTR\htr\detection\my_comparisons\morpho
 HTR\htr\detection\my_comparisons\our_approach
 
-![steps](https://github.com/alarxx/HTR/blob/main/htr/detection/my_comparisons/our_approach/steps.png)
+![steps.png](https://github.com/alarxx/HTR/blob/main/htr/detection/my_comparisons/our_approach/steps.png)
 
-![result](https://github.com/alarxx/HTR/blob/main/htr/detection/my_comparisons/our_approach/result.png)
+![result.png](https://github.com/alarxx/HTR/blob/main/htr/detection/my_comparisons/our_approach/result.png)
 
 
 # Text Recognition
