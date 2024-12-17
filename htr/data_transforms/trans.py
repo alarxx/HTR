@@ -74,9 +74,9 @@ class DataTransforms:
             # transforms.RandomPerspective(distortion_scale=0.5, p=0.5),
             transforms.RandomAffine(
                 degrees=30,  # Повороты на ± градусов
-                translate=(0.2, 0.2),  # Сдвиг до % от ширины/высоты
-                scale=(0.5, 2),  # Масштабирование
-                shear=30  # Наклон на ± градусов
+                translate=(0.05, 0.05),  # Сдвиг до % от ширины/высоты
+                scale=(0.9, 1.5),  # Масштабирование
+                shear=10  # Наклон на ± градусов
             ),
             # PadToSquareAndConditionalResize(64), # Паддинг или ресайз до 64x64
             transforms.ToTensor(),
