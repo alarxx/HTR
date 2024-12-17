@@ -1,3 +1,6 @@
+import os
+import re
+
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -9,8 +12,8 @@ from torchvision import transforms
 from torchvision.datasets import ImageFolder
 
 from sklearn.model_selection import KFold, StratifiedKFold
-from sklearn.metrics import f1_score
 from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score, f1_score, confusion_matrix, ConfusionMatrixDisplay
 
 from collections import Counter
 
@@ -19,7 +22,6 @@ from classificator.cnns import FullyCNN10
 
 import pickle
 from utils.io import Savior
-
 
 
 #====================================================================
@@ -160,7 +162,22 @@ def validate_one_epoch(model, dataloader, criterion):
 #
 # https://pytorch.org/vision/stable/generated/torchvision.datasets.ImageFolder.html#torchvision.datasets.ImageFolder
 #====================================================================
-full_dataset = ImageFolder(root='./datasets/CMNIST', transform=None) # -> Dataset - List[Tuple[<PIL.Image>, int]]
+
+def natural_sort_key(s):
+    return [int(text) if text.isdigit() else text.lower() for text in re.split(r'(\d+)', s)]
+
+# Класс с сортировкой
+class SortingImageFolder(ImageFolder):
+    def find_classes(self, directory):
+        # Получаем список классов (папок)
+        classes = [d.name for d in os.scandir(directory) if d.is_dir()]
+        # Сортируем их естественным порядком
+        classes.sort(key=natural_sort_key)
+        class_to_idx = {cls_name: i for i, cls_name in enumerate(classes)}
+        return classes, class_to_idx
+
+# full_dataset = ImageFolder(root='./datasets/CMNIST', transform=None) # -> Dataset - List[Tuple[<PIL.Image>, int]]
+full_dataset = SortingImageFolder(root='./datasets/CMNIST', transform=None)
 
 print("Full Dataset:", full_dataset)
 print()
@@ -354,27 +371,73 @@ plt.legend()
 plt.grid(True)
 plt.show()
 
+# =======================
+# Выбор лучшей модели
+# =======================
+best_fold = -1
+best_val_acc = -1
 
+for i, fold_result in enumerate(fold_results):
+    val_acc_last_epoch = fold_result[2][-1]  # val_acc_history на последней эпохе
+    if val_acc_last_epoch > best_val_acc:
+        best_val_acc = val_acc_last_epoch
+        best_fold = i
 
-#
-# #====================================================================
-# # 12. Загрузка модели и использование
-# #====================================================================
-# checkpoint = torch.load(model_save_path, map_location=device)
-# model = SimpleCNN(num_classes=len(checkpoint['classes'])).to(device)
-# model.load_state_dict(checkpoint['model_state_dict'])
-# model.eval()
-# class_names = checkpoint['classes']
-#
-# # Пример использования: предсказание для одного изображения
-# import cv2
-#
-# test_image_path = 'path_to_single_letter.jpg'
-# img = Image.open(test_image_path).convert('RGB')
-# img_tensor = val_transform(img).unsqueeze(0).to(device) # [C, H, W] -> [1, C, H, W]
-#
-# with torch.no_grad():
-#     outputs = model(img_tensor)
-#     _, predicted = torch.max(outputs, 1)
-#     predicted_class = class_names[predicted.item()]
-#     print(f"Predicted class: {predicted_class}")
+print(f"Best model is from fold {best_fold+1} with Validation Accuracy: {best_val_acc:.4f}")
+
+# =======================
+# Загрузка лучшей модели
+# =======================
+checkpoint = torch.load(f"Alphabet_FCNN_{best_fold}.pth", map_location=device)
+model = FullyCNN10(num_classes=len(checkpoint['classes'])).to(device)
+model.load_state_dict(checkpoint['model_state_dict'])
+model.eval()
+
+print("Best model loaded successfully!")
+
+# =======================
+# Тестирование на global_test_dataset
+# =======================
+test_ds = CustomDataset(global_test_dataset, transform=DataTransforms().val_transform)
+test_loader = DataLoader(test_ds, batch_size=batch_size, shuffle=False)
+
+y_true = []
+y_pred = []
+
+with torch.no_grad():
+    for images, labels in test_loader:
+        images, labels = images.to(device), labels.to(device)
+        outputs = model(images)
+        _, preds = torch.max(outputs, 1)
+        y_true.extend(labels.cpu().numpy())
+        y_pred.extend(preds.cpu().numpy())
+
+# =======================
+# Расчёт метрик
+# =======================
+test_accuracy = accuracy_score(y_true, y_pred)
+test_f1 = f1_score(y_true, y_pred, average='macro')
+print(f"Test Accuracy: {test_accuracy:.4f}")
+print(f"Test F1-Score: {test_f1:.4f}")
+
+# =======================
+# Confusion Matrix
+# =======================
+
+class_mapping = {
+    0: "А",  1: "Ә",  2: "Б",  3: "В",  4: "Г",  5: "Ғ",
+    6: "Д",  7: "Е",  8: "Ё",  9: "Ж",  10: "З", 11: "И",
+    12: "Й", 13: "К", 14: "Қ", 15: "Л", 16: "М", 17: "Н",
+    18: "Ң", 19: "О", 20: "Ө", 21: "П", 22: "Р", 23: "С",
+    24: "Т", 25: "У", 26: "Ұ", 27: "Ү", 28: "Ф", 29: "Х",
+    30: "Һ", 31: "Ц", 32: "Ч", 33: "Ш", 34: "Щ", 35: "Ъ",
+    36: "Ы", 37: "І", 38: "Ь", 39: "Э", 40: "Ю", 41: "Я"
+}
+kazakh_labels = [class_mapping[i] for i in range(len(class_mapping))]
+disp = ConfusionMatrixDisplay(confusion_matrix=confusion_matrix(y_true, y_pred), display_labels=kazakh_labels)
+
+plt.figure(figsize=(42, 42))
+plt.rcParams.update({'font.size': 8})  # Общий размер шрифта
+disp.plot(cmap='Blues', values_format='d')
+plt.title("Confusion Matrix on Test Dataset")
+plt.show()
