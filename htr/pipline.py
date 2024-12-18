@@ -122,7 +122,7 @@ print()
 
 
 
-class_mapping = { # Пока не используется
+class_mapping = {
     "00": "А", "01": "Ә", "02": "Б", "03": "В", "04": "Г", "05": "Ғ",
     "06": "Д", "07": "Е", "08": "Ё", "09": "Ж", "10": "З", "11": "И",
     "12": "Й", "13": "К", "14": "Қ", "15": "Л", "16": "М", "17": "Н",
@@ -309,8 +309,8 @@ for fold, (train_idx, val_idx) in enumerate(skf.split(indices, labels)):
     # Соотношение классов должно оставаться одинаковым.
     train_labels = [labels[idx] for idx in train_idx]
     val_labels = [labels[idx] for idx in val_idx]
-    # display_class_percentages(train_labels, mapped_labels, dataset_name="KFold Train")
-    # display_class_percentages(val_labels, mapped_labels, dataset_name="KFold Validation")
+    display_class_percentages(train_labels, mapped_labels, dataset_name="KFold Train")
+    display_class_percentages(val_labels, mapped_labels, dataset_name="KFold Validation")
 
     # Подготовка датасетов для конкретного фолда
     train_subset = Subset(global_train_dataset, train_idx)
