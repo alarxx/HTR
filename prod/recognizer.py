@@ -116,18 +116,18 @@ class KazakhTextRecognizer:
 
         text_regions, text_lines, steps = recognizer.detect_text_regions(image)
 
-        # recognizer.visualize_detection_steps(steps)
+        recognizer.visualize_detection_steps(steps)
 
-        # painted_image = recognizer.draw_boxes(image, text_lines, text_regions)
-        # recognizer.display_image(painted_image, "Detected Text")
+        painted_image = recognizer.draw_boxes(image, text_lines, text_regions)
+        recognizer.display_image(painted_image, "Detected Text")
 
         word_images = recognizer.crop_words(image, text_regions)
         recognized_texts = recognizer.recognize_text(word_images)
 
         print("Recognized Texts:", recognized_texts)
 
-        # painted_with_text = recognizer.draw_recognized_text(painted_image, text_regions, recognized_texts)
-        # recognizer.display_image(painted_with_text, "Recognized Text Overlaid")
+        painted_with_text = recognizer.draw_recognized_text(painted_image, text_regions, recognized_texts)
+        recognizer.display_image(painted_with_text, "Recognized Text Overlaid")
 
         return ' '.join(recognized_texts)
 
