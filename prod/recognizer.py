@@ -5,7 +5,7 @@ from PIL import Image, ImageDraw, ImageFont
 import torch
 from torchvision.transforms import transforms
 
-from ctc.data_transforms.trans import MinMaxWidth
+from data_transforms.trans import MinMaxWidth
 from detection.mydetector import MyDetector
 from classificator.cnns import FCNN
 
