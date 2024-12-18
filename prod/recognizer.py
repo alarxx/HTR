@@ -124,7 +124,6 @@ class KazakhTextRecognizer:
         word_images = recognizer.crop_words(image, text_regions)
         recognized_texts = recognizer.recognize_text(word_images)
 
-        print("Recognized Texts:", recognized_texts)
 
         painted_with_text = recognizer.draw_recognized_text(painted_image, text_regions, recognized_texts)
         recognizer.display_image(painted_with_text, "Recognized Text Overlaid")
@@ -141,5 +140,6 @@ if __name__ == "__main__":
 
     recognized_texts = recognizer.end2end(input_image_path="./handwritten_kaz.jpg")
 
+    print("Recognized Texts:", recognized_texts)
 
 
