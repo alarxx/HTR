@@ -37,8 +37,8 @@ class KazakhTextRecognizer:
 
         # Transformation pipeline
         self.transform = transforms.Compose([
+            # transforms.Resize((64, 256)),  # Пример: фиксируем высоту = 32, ширину до 1280 (или динамически)
             transforms.ToTensor(),
-            MinMaxWidth(),
         ])
 
     def detect_text_regions(self, image):

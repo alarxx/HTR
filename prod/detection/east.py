@@ -133,7 +133,7 @@ class EAST:
             # vertices = cv2.boxPoints(boxes[i])
             vertices = cv2.boxPoints(((center[0] * rW, center[1] * rH), (size[0] * rW, size[1] * rH), angle))
             # vertices = np.int0(vertices * [rW, rH])
-            vertices = np.int0(vertices)
+            vertices = np.int32(vertices)
             text_regions.append(vertices)
 
         return text_regions
