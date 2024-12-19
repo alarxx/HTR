@@ -2,7 +2,9 @@ import cv2
 import matplotlib.pyplot as plt
 
 from . import east  # Changed to relative import
-from . import morphological  # Changed to relative import
+from . import morphological
+# import east
+# import morphological
 
 
 class MyDetector(morphological.Morphological):

@@ -42,6 +42,7 @@ class KazakhTextRecognizer:
             transforms.ToTensor(),
             MinMaxWidth(),
         ])
+
     def detect_text_regions(self, image):
         text_regions, text_lines, steps = self.detector.detect(image)
         return text_regions, text_lines, steps
