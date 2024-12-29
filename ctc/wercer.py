@@ -156,17 +156,14 @@ test_loader = DataLoader(test_ds, batch_size=batch_size, shuffle=False, collate_
 
 #############################################################
 # Функция для декодирования выхода модели (greedy decode)
-# Теперь возвращаем также среднюю уверенность
+# Возвращаем также среднюю уверенность
 #############################################################
 def greedy_decode(logits):
     # logits: [T, B, C]
-    # Применяем softmax по последней оси (C), чтобы получить вероятности
     probs = F.softmax(logits, dim=2)  # [T, B, C]
-
     argmaxes = torch.argmax(probs, dim=2) # [T, B]
     results = []
     confidences = []
-
     for b in range(argmaxes.size(1)):
         seq = argmaxes[:, b].cpu().numpy()
         decoded = []
@@ -175,16 +172,15 @@ def greedy_decode(logits):
         for t, s in enumerate(seq):
             if s != 0 and s != prev:
                 decoded.append(s)
-                # вероятность выбранного символа
                 char_confidences.append(probs[t, b, s].item())
             prev = s
-        text = ''.join(idx_to_char[idx] for idx in decoded)
+        # text = ''.join(idx_to_char[idx] for idx in decoded)
+        text = ''.join(idx_to_char[idx] for idx in decoded if idx in idx_to_char)
         results.append(text)
 
         if len(char_confidences) > 0:
             avg_conf = sum(char_confidences) / len(char_confidences)
         else:
-            # Если ничего не распознано, пусть будет 0
             avg_conf = 0.0
         confidences.append(avg_conf)
 
@@ -204,39 +200,42 @@ model.load_state_dict(checkpoint['model_state_dict'])
 model.eval()
 
 #############################################################
-# Демонстрация результата на случайных образцах из ds
+# Подсчёт WER и CER на тестовом датасете
 #############################################################
+total_char_distance = 0
+total_chars = 0
+total_word_distance = 0
+total_words = 0
 
-ds = test_ds
-# ds = val_ds
+with torch.no_grad():
+    for images, targets, target_lengths, texts in test_loader:
+        images = images.to(device)
+        logits = model(images)  # [T, B, C], предположим T это ширина фичей, B=batch
+        # Для CTC декодирования предполагается (T, B, C)
+        # Если модель возвращает (B, C, W, ...), надо преобразовать. Предположим, что logits уже в нужной форме.
+        # Если нет, то надо дополнительно транспонировать:
+        if logits.size(0) != images.size(0):
+            # Предположим, что модель возвращает (B, C, W), надо поменять на (W, B, C)
+            logits = logits.permute(2, 0, 1)  # если форма была (B, C, W)
 
-num_samples = 3  # Кол-во случайных примеров
-
-fig, axes = plt.subplots(nrows=num_samples, ncols=1, figsize=(8, num_samples*2))
-if num_samples == 1:
-    axes = [axes]
-
-for i in range(num_samples):
-    idx = random.randint(0, len(ds)-1)
-    image, target, target_length, text = ds[idx]
-
-    # Подготовка изображения для модели
-    image_input = image.unsqueeze(0).to(device)
-
-    with torch.no_grad():
-        logits = model(image_input)
         preds, confs = greedy_decode(logits)
-        recognized = preds[0] if len(preds) > 0 else ""
-        avg_conf = confs[0] if len(confs) > 0 else 0.0
 
-    # Вывод результата
-    print(f"{text} -> {recognized}, средняя уверенность: {avg_conf:.4f}")
+        # Подсчёт ошибок
+        for pred, gt in zip(preds, texts):
+            # CER
+            char_dist = Levenshtein.distance(pred, gt)
+            total_char_distance += char_dist
+            total_chars += len(gt)
 
-    # Отображение изображения
-    img_show = ntensor2cvmat(image)
-    axes[i].imshow(img_show)
-    axes[i].set_title(f"GT: {text}\nPredicted: {recognized}\nAvg Conf: {avg_conf:.4f}", fontproperties=None)
-    axes[i].axis('off')
+            # WER (разбиваем по пробелам, если есть)
+            pred_words = pred.split()
+            gt_words = gt.split()
+            word_dist = Levenshtein.distance(' '.join(pred_words), ' '.join(gt_words))
+            total_word_distance += word_dist
+            total_words += len(gt_words)
 
-plt.tight_layout()
-plt.show()
+CER = total_char_distance / total_chars if total_chars > 0 else 0.0
+WER = total_word_distance / total_words if total_words > 0 else 0.0
+
+print("Test CER: {:.4f}".format(CER))
+print("Test WER: {:.4f}".format(WER))

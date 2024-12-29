@@ -1,9 +1,9 @@
 import torch
 import matplotlib.pyplot as plt
-from classificator.cnns import FCNN  # Предполагается, что этот класс объявлен так же, как в training.py
+from classificator.cnns import FCNN, FCNN_old  # Предполагается, что этот класс объявлен так же, как в training.py
 
 # Loading the last model
-checkpoint_path = "./ffff/FCNN_CTC_e11.pth"
+checkpoint_path = "./FCNN_CTC_e35.pth"
 checkpoint = torch.load(checkpoint_path)
 train_loss_history = checkpoint['train_loss_history']
 train_acc_history = checkpoint['train_acc_history']

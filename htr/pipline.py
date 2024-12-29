@@ -136,7 +136,7 @@ mapped_labels = [class_mapping[class_id] for class_id in full_dataset.classes]
 print("mapped_labels:", mapped_labels)
 
 
-# display_class_percentages(full_dataset.targets, mapped_labels, dataset_name="Original")
+display_class_percentages(full_dataset.targets, mapped_labels, dataset_name="Original")
 
 
 
@@ -165,8 +165,8 @@ print(f"Test dataset: {global_test_dataset}")
 # # Получаем лейблы для обучающей и тестовой выборок
 global_train_labels = [full_dataset.targets[idx] for idx in train_indices] 
 global_test_labels = [full_dataset.targets[idx] for idx in test_indices]
-# display_class_percentages(global_train_labels, mapped_labels, dataset_name="Train")
-# display_class_percentages(global_test_labels, mapped_labels, dataset_name="Test")
+display_class_percentages(global_train_labels, mapped_labels, dataset_name="Train")
+display_class_percentages(global_test_labels, mapped_labels, dataset_name="Test")
 
 
 

@@ -7,7 +7,7 @@ from torchvision.transforms import transforms
 
 from data_transforms.trans import MinMaxWidth
 from detection.mydetector import MyDetector
-from classificator.cnns import FCNN
+from classificator.cnns import FCNN, FCNN_old
 
 
 class KazakhTextRecognizer:
@@ -30,14 +30,14 @@ class KazakhTextRecognizer:
         self.detector = MyDetector(east_model_path=detector_model_path)
 
         # Load classifier
-        self.model = FCNN(num_classes=len(self.alphabet))
+        self.model = FCNN_old(num_classes=len(self.alphabet))
         checkpoint = torch.load(classifier_model_path)
         self.model.load_state_dict(checkpoint["model_state_dict"])
         self.model.eval()
 
         # Transformation pipeline
         self.transform = transforms.Compose([
-            # transforms.Resize((64, 256)),  # Пример: фиксируем высоту = 32, ширину до 1280 (или динамически)
+            transforms.Resize((64, 256)),  # Пример: фиксируем высоту = 32, ширину до 1280 (или динамически)
             transforms.ToTensor(),
         ])
 
@@ -116,17 +116,17 @@ class KazakhTextRecognizer:
 
         text_regions, text_lines, steps = recognizer.detect_text_regions(image)
 
-        recognizer.visualize_detection_steps(steps)
+        # recognizer.visualize_detection_steps(steps)
 
         painted_image = recognizer.draw_boxes(image, text_lines, text_regions)
-        recognizer.display_image(painted_image, "Detected Text")
+        # recognizer.display_image(painted_image, "Detected Text")
 
         word_images = recognizer.crop_words(image, text_regions)
         recognized_texts = recognizer.recognize_text(word_images)
 
 
         painted_with_text = recognizer.draw_recognized_text(painted_image, text_regions, recognized_texts)
-        recognizer.display_image(painted_with_text, "Recognized Text Overlaid")
+        # recognizer.display_image(painted_with_text, "Recognized Text Overlaid")
 
         return ' '.join(recognized_texts)
 
@@ -138,7 +138,7 @@ if __name__ == "__main__":
         classifier_model_path="FCNN_CTC_main.pth",
     )
 
-    recognized_texts = recognizer.end2end(input_image_path="./handwritten_kaz.jpg")
+    recognized_texts = recognizer.end2end(input_image_path="./handwritten_kaz2.jpg")
 
     print("Recognized Texts:", recognized_texts)
 
