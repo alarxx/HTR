@@ -101,7 +101,7 @@ The project is deployed on Google Cloud using a student subscription plan. We bu
 Achieved a validation F1-Score of 96.33% and test accuracy of 96.38%. These results validate the model’s ability to classify individual characters effectively.
 
 **Word Recognition:**  
-Achieved a Character Error Rate (CER) of 3.66% and Word Error Rate (WER) of 22.71% on the test dataset. We obtained results on par with the best results of the dataset authors KOHTD: best CER 6.52%, best WER 22.60% (Toiganbayeva et al., 2022). Since this is Error Rate, the lower the value, the better.
+Achieved a Character Error Rate (CER) of 3.66% and Word Error Rate (WER) of 22.71% on the test dataset. We obtained results on par with the best results of the dataset authors KOHTD: best CER 6.52%, best WER 22.60% (Toiganbayeva et al., 2022). Since this is Error Rate, the lower the value, the better. But, it's important to clarify that we only classified letters of the alphabet.
 
 ## Future research
 - Circular text recognition
