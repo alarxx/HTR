@@ -51,7 +51,7 @@ For **[Handwriting Recognition (HWR)](https://en.wikipedia.org/wiki/Handwriting_
 
 ---
 
-### Text Detection
+## Text Detection
 
 **General Algorithm of the applied Text Detection**
 1. Estimation of average text height using EAST
@@ -67,7 +67,7 @@ The approach combines the advantages of deep model (EAST) with classical image p
 **Limitations**  
 The method is designed to detect individual words on white paper, where the lines of text are written horizontally. This is a limitation, because handwritten text can be written in different structures, in a circle, in tables, and there can be different formulas and this requires a different research.
 
-### Text Recognition
+## Text Recognition
 
 1) Alphabet Recognition to prove that model can classify letters on CMNIST
 2) Word Recognition with CTC Loss on KOHTD
@@ -76,7 +76,7 @@ The method is designed to detect individual words on white paper, where the line
 Подход с распознаванием слов (IWR) с CTC Loss можно назвать end-to-end решением распознавания слов, так как он не включает промежуточного поиска букв, как это делается в OCR или ICR. Но, несмотря на это сама модель распознавания остается без кардинальных изменений, поэтому для доказательства, что модель способна распознавать отдельные буквы, мы сперва экспериментируем с распознаванием алфавита. 
 End-to-end подход подразумевает, что модель будет последовательно распознавать участки изображения, двигаясь слева направо, для каждого участка выдавая вектор вероятностей каждой буквы алфавита, а также вероятность промежуточного межбуквенного пространства (blank). Легче описать это так, будто мы скармливаем модели области изображения, но на самом деле такой подход не был бы оптимальным и в реализации мы делаем не так. CNN могут обрабатывать изображения почти любой размерности, проблема будет только с конечным MLP, который принимает вектор определенной размерности, для решения этого существуют так называемые Fully CNN, которые принимают изображения любой размерности и выдают варьирующуюся размерность. Это важно знать, так как при распознавании слов, наша модель принимает изображения слова целиком и выдает матрицу с варьирующимся количеством столбцов, где каждый столбец это вектор вероятностей буквы или blank-а на участке изображения, в нашей реализации участка размером rx8. Эта варьирующаяся длина достигается за счет Global Max Pooling-а (GMP) по высоте. В нашей реализации модели для каждой области rx8 после GMP у нас вектор размерностью 512, который мы подаем на MLP, а количество таких векторов зависит от ширины подаваемого на вход изображения, что должно быть равно width // 8. 
 
-## Model 
+### Model 
 
 VGG-like модель с Global Max Pooling-ом по высоте и после MLP. Это CNN, которая, принимает изображения почти любой размерности и выдает характеристики, как будто временной ряд, который потенциально мы дальше можем передать на соответствующие модели, которые обрабатывают временные ряды типа LSTM, GRU или Transformer.
 
