@@ -65,7 +65,7 @@ The approach combines the advantages of deep model (EAST) with classical image p
 <img src="https://github.com/alarxx/HTR/raw/main/htr/detection/my_comparisons/our_approach/steps.png" alt="steps.png" width="1000"/>
 
 **Limitations**  
-The method is designed to detect individual words on white paper, where the lines of text are written horizontally. This is a limitation, because handwritten text can be written in different structures, in a circle, in tables, and there can be different mathematical formulas and this requires a different research.
+The method is designed to detect individual words on white paper, where the lines of text are written horizontally. This is a limitation, because handwritten text can be written in different structures, in a circle, in tables, and there can be different mathematical formulas and these requires a different research.
 
 ## Text Recognition
 
