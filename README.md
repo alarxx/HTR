@@ -154,6 +154,28 @@ OpenCV:
 - Szeliski, R. (2022). Computer vision: algorithms and applications. Springer Nature.
 - Прохоренок, Н. А. (2018). OpenCV и Java. Обработка изображений и компьютерное зрение. БХВ-Петербург.
 
+
+Text Detection References:
+- https://googlecode.blogspot.com/2006/08/announcing-tesseract-ocr.html
+- https://sourceforge.net/projects/tesseract-ocr/
+- Smith, R. (2007, September). An overview of the Tesseract OCR engine. In Ninth international conference on document analysis and recognition (ICDAR 2007) (Vol. 2, pp. 629-633). IEEE.
+- 
+- EAST TEXT DETECTION EXAMPLE: https://github.com/opencv/opencv/blob/master/samples/dnn/text_detection.py
+- Text detection model: https://github.com/argman/EAST
+- Download link: https://www.dropbox.com/s/r2ingd0l3zt8hxs/frozen_east_text_detection.tar.gz?dl=1
+- Zhou, X., Yao, C., Wen, H., Wang, Y., Zhou, S., He, W., & Liang, J. (2017). East: an efficient and accurate scene text detector. In Proceedings of the IEEE conference on Computer Vision and Pattern Recognition (pp. 5551-5560).
+-
+- Canny, J. (1986). A computational approach to edge detection. IEEE Transactions on pattern analysis and machine intelligence, (6), 679-698.
+- https://docs.opencv.org/4.x/d9/d61/tutorial_py_morphological_ops.html
+- Vincent, L. (1991). Morphological transformations of binary images with arbitrary structuring elements. Signal processing, 22(1), 3-23.
+
+Papers:
+- Graves, A., Fernández, S., Gomez, F., & Schmidhuber, J. (2006, June). Connectionist temporal classification: labelling unsegmented sequence data with recurrent neural networks. In Proceedings of the 23rd international conference on Machine learning (pp. 369-376).
+- Lin, M. (2013). Network in network. arXiv preprint arXiv:1312.4400.
+- Nurseitov, D., Bostanbekov, K., Kurmankhojayev, D., Alimova, A., Abdallah, A., & Tolegenov, R. (2021). Handwritten Kazakh and Russian (HKR) database for text recognition. Multimedia Tools and Applications, 80(21), 33075-33097.
+- Simonyan, K., & Zisserman, A. (2014). Very deep convolutional networks for large-scale image recognition. arXiv preprint arXiv:1409.1556.
+- Toiganbayeva, N., Kasem, M., Abdimanap, G., Bostanbekov, K., Abdallah, A., Alimova, A., & Nurseitov, D. (2022). Kohtd: Kazakh offline handwritten text dataset. Signal Processing: Image Communication, 108, 116827.
+
 YouTube:
 - Евгений Разинков. (2023). Machine Learning (2023, spring). https://www.youtube.com/playlist?list=PL6-BrcpR2C5SCyFvs9Xojv24povpBCI6W
 - Евгений Разинков. (2022). Лекции по машинному обучению (осень, 2022). https://www.youtube.com/playlist?list=PL6-BrcpR2C5QYSAfoG8mbQUsI9zPVnlBV
