@@ -116,6 +116,19 @@ Achieved a Character Error Rate (CER) of 3.66% and Word Error Rate (WER) of 22.7
 * **Alar Akilbekov** - [alarxx](https://github.com/alarxx) - [@alarxx](https://t.me/alarxx)
 * **Baktiyar Toksanbay**
 
+## Features
+
+## Installation
+
+## Contribute
+- Issue Tracker: 
+- Source Code: https://github.com/alarxx/HTR/
+
+## Support
+
+Let us know if you have issues.
+Contact: alar.akilbekov@gmail.com
+
 ## Licence 
 
 [Mozilla Public License](https://github.com/alarxx/HTR/blob/main/LICENSE)
